@@ -1,103 +1,74 @@
-<script setup>
-
-
-</script>
-
 <template>
-  <header class="header header-transparent header-sticky d-lg-block d-none">
-    <div class="header-middle">
-      <div class="container">
-        <div class="row align-items-center">
-          <div class="col-lg-12 mt-2">
-            <div class="header-middle-right">
-              <div class="row">
-                <div class="col-lg-10">
-                  <div class="emergncy-contact-area">
-                    <div class="row">
-                      <div class="col-sm-4">
-                        <div class="single-emergncy-contact">
-                          <div class="icon">
-                            <i class="fa fa-phone"></i>
-                          </div>
-                          <div class="content">
-                            <h3><a href="tel:02026166466">+020 26166466</a></h3>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-sm-8">
-                        <div class="single-emergncy-contact">
-                          <div class="icon">
-                            <i class="fa fa-map-marker"></i>
-                          </div>
-                          <div class="content">
-                            <h3>
-                              6th & 7th floor Gagan Uno, 
-                              Dhole Patil Road Opp. Vohuman Cafe, near Ruby Hall Clinic, 
-                              Sangamvadi, 
-                              Pune, Maharashtra 411001
-                            </h3>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+  <header class="bg-white shadow-md w-full">
+    <div class="max-w-screen-xl mx-auto flex items-center justify-between p-4">
+      <!-- Logo -->
+      <router-link to="/" class="text-2xl font-bold text-blue-600">
+        E-Shop
+      </router-link>
+
+      <!-- Search Bar -->
+      <div class="hidden md:flex items-center border border-gray-300 rounded-lg px-3 py-2 w-1/3">
+        <input 
+          type="text" 
+          v-model="searchQuery" 
+          placeholder="Search products..." 
+          class="w-full outline-none text-gray-600"
+        />
+        <button @click="searchProducts" class="text-gray-500 hover:text-blue-600">
+          🔍
+        </button>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="hidden md:flex items-center space-x-6">
+        <router-link to="/" class="hover:text-blue-600">Home</router-link>
+        <router-link to="/shop" class="hover:text-blue-600">Shop</router-link>
+        <router-link to="/about" class="hover:text-blue-600">About</router-link>
+        <router-link to="/contact" class="hover:text-blue-600">Contact</router-link>
+      </nav>
+
+      <!-- Icons (Cart & Menu) -->
+      <div class="flex items-center space-x-4">
+        <router-link to="/cart" class="relative">
+          🛒
+          <span 
+            v-if="cartItemCount > 0" 
+            class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1.5">
+            {{ cartItemCount }}
+          </span>
+        </router-link>
+
+        <!-- Mobile Menu Toggle -->
+        <button @click="toggleMenu" class="md:hidden text-2xl">☰</button>
       </div>
     </div>
-    <div class="header-bottom menu-right">
-      <div class="container">
-        <div class="row">
-          <div class="col-12 d-flex">
-            <div class="logo">
-              <router-link to="/">
-                <img src="/assets/images/logo-trnsprnt.png" alt="" />
-              </router-link>
-            </div>
-            <nav class="main-menu">
-              <Menu></Menu>
-            </nav>
-          </div>
-        </div>
-      </div>
+
+    <!-- Mobile Menu -->
+    <div v-if="isMenuOpen" class="md:hidden bg-white border-t p-4 space-y-3">
+      <router-link to="/" class="block" @click="toggleMenu">Home</router-link>
+      <router-link to="/shop" class="block" @click="toggleMenu">Shop</router-link>
+      <router-link to="/about" class="block" @click="toggleMenu">About</router-link>
+      <router-link to="/contact" class="block" @click="toggleMenu">Contact</router-link>
     </div>
   </header>
-  <div class="mobile-header-area d-block d-lg-none">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-6">
-          <div class="logo">
-            <router-link to="/">
-              <img src="/assets/images/logo-trnsprnt.png" alt="" />
-            </router-link>
-          </div>
-        </div>
-        <div class="col-6 d-flex align-items-center justify-content-end">
-          <div class="mobile-navigation-icon" id="mobile-menu-trigger">
-            <i></i>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="offcanvas-mobile-menu d-block d-lg-none" id="mobile-menu-overlay">
-    <a href="#" class="offcanvas-menu-close" id="mobile-menu-close-trigger">
-      <i class="fa fa-times"></i>
-    </a>
-
-    <div class="offcanvas-wrapper">
-      <div class="offcanvas-inner-content">
-        <nav class="offcanvas-navigation">
-          <Menu
-            :liHasClass="'menu-item-has-children'"
-            :subMenuClass="'submenu2'"
-          ></Menu>
-        </nav>
-      </div>
-    </div>
-  </div>
 </template>
-<style scoped></style>
+
+<script setup>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+
+const searchQuery = ref("");
+const cartItemCount = ref(3); // Example cart count, should come from store
+const isMenuOpen = ref(false);
+const router = useRouter();
+
+const searchProducts = () => {
+  if (searchQuery.value) {
+    router.push(`/search?q=${searchQuery.value}`);
+  }
+};
+
+const toggleMenu = () => {
+  isMenuOpen.value = !isMenuOpen.value;
+};
+</script>
